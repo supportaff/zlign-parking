@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Zlign — Parking by the week or the month</title>
+<meta name="description" content="Zlign is a parking marketplace for India. Space owners list a driveway, garage or bay. Vehicle owners book it by the week or the month and pay the owner at the spot." />
+<meta name="theme-color" content="#ffffff" />
+<meta property="og:title" content="Zlign — Parking by the week or the month" />
+<meta property="og:description" content="Book a driveway, garage or bay near you by the week or the month. Pay the owner at the spot, in cash or UPI." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b6b5b'/%3E%3Ctext x='32' y='45' font-family='system-ui,sans-serif' font-size='36' font-weight='700' fill='white' text-anchor='middle'%3EZ%3C/text%3E%3C/svg%3E" />
+<style>
+  :root{
+    --ink:#101828; --ink-2:#475467; --ink-3:#667085;
+    --line:#e4e7ec; --tint:#f7faf9;
+    --brand:#0b6b5b; --brand-dark:#084d42; --brand-tint:#e8f4f1;
+    --amber:#b45309; --amber-tint:#fdf3e3;
+    --radius:16px; --max:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:#fff; color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.6;
+  }
+  a{color:var(--brand); text-decoration:none}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; justify-content:center;
+    padding:13px 22px; border-radius:999px; font-weight:600; font-size:15px;
+    border:1px solid transparent; transition:.15s ease; white-space:nowrap;
+  }
+  .btn-primary{background:var(--brand); color:#fff}
+  .btn-primary:hover{background:var(--brand-dark)}
+  .btn-ghost{background:#fff; color:var(--ink); border-color:var(--line)}
+  .btn-ghost:hover{border-color:#c9d2cf; background:var(--tint)}
+
+  /* header */
+  header{position:sticky; top:0; z-index:20; background:rgba(255,255,255,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+  .nav{display:flex; align-items:center; justify-content:space-between; height:66px}
+  .logo{display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px; color:var(--ink)}
+  .mark{width:32px; height:32px; border-radius:9px; background:var(--brand); color:#fff; display:grid; place-items:center; font-weight:700}
+  .nav-links{display:flex; align-items:center; gap:26px; font-size:15px; color:var(--ink-2)}
+  .nav-links a:hover{color:var(--ink)}
+  @media(max-width:820px){ .nav-links{display:none} }
+
+  /* hero */
+  .hero{padding:72px 0 56px; background:linear-gradient(180deg,#fff 0%,var(--tint) 100%)}
+  .hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center}
+  @media(max-width:940px){ .hero-grid{grid-template-columns:1fr; gap:36px} .hero{padding:48px 0 40px} }
+  .pill{
+    display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600;
+    background:#fff; border:1px solid var(--line); color:var(--ink-2);
+    padding:7px 14px; border-radius:999px;
+  }
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--brand)}
+  h1{font-size:clamp(34px,4.6vw,54px); line-height:1.08; letter-spacing:-.02em; margin:20px 0 18px; font-weight:700}
+  .lede{font-size:clamp(16px,1.6vw,19px); color:var(--ink-2); margin:0 0 28px; max-width:34em}
+  .cta{display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+  .under{font-size:13px; color:var(--ink-3); margin-top:14px}
+
+  .phone{
+    background:#fff; border:1px solid var(--line); border-radius:26px;
+    box-shadow:0 24px 60px -28px rgba(16,24,40,.28); padding:20px; max-width:340px; margin-left:auto;
+  }
+  @media(max-width:940px){ .phone{margin:0 auto} }
+  .phone-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px}
+  .phone-title{font-size:13px; font-weight:600; color:var(--ink-3); text-transform:uppercase; letter-spacing:.07em}
+  .card-mini{border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:10px}
+  .mini-top{display:flex; justify-content:space-between; align-items:start; gap:10px}
+  .mini-name{font-weight:600; font-size:15px}
+  .mini-sub{font-size:13px; color:var(--ink-3); margin-top:2px}
+  .tag{font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px; white-space:nowrap}
+  .tag-free{background:var(--brand-tint); color:var(--brand-dark)}
+  .tag-soon{background:var(--amber-tint); color:var(--amber)}
+  .mini-price{font-size:13px; color:var(--ink-2); margin-top:10px; padding-top:10px; border-top:1px dashed var(--line)}
+  .map-strip{
+    border:1px solid var(--line); border-radius:14px; height:86px; margin-bottom:10px;
+    background:
+      radial-gradient(circle at 22% 40%, rgba(11,107,91,.18) 0 6px, transparent 7px),
+      radial-gradient(circle at 62% 62%, rgba(11,107,91,.14) 0 5px, transparent 6px),
+      repeating-linear-gradient(38deg,#eef2f1 0 2px,#fff 2px 14px);
+    display:grid; place-items:center; font-size:12px; color:var(--ink-3); font-weight:600;
+  }
+
+  /* strip */
+  .strip{border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:#fff}
+  .strip-row{display:flex; flex-wrap:wrap; justify-content:space-between; gap:18px; padding:22px 0; font-size:14px; color:var(--ink-2)}
+  .strip-row span{display:inline-flex; align-items:center; gap:9px}
+  .tick{color:var(--brand); font-weight:700}
+
+  section{padding:76px 0}
+  @media(max-width:700px){ section{padding:52px 0} }
+  .kicker{font-size:13px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--brand); margin:0 0 12px}
+  h2{font-size:clamp(26px,3.2vw,38px); line-height:1.15; letter-spacing:-.015em; margin:0 0 14px; font-weight:700}
+  .sub{font-size:17px; color:var(--ink-2); margin:0; max-width:44em}
+
+  /* two sides */
+  .sides{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:38px}
+  @media(max-width:820px){ .sides{grid-template-columns:1fr} }
+  .side{border:1px solid var(--line); border-radius:var(--radius); padding:28px; background:#fff}
+  .side h3{font-size:20px; margin:0 0 6px}
+  .side p{color:var(--ink-2); font-size:15px; margin:0 0 18px}
+  .side ul{list-style:none; padding:0; margin:0; display:grid; gap:11px}
+  .side li{display:flex; gap:11px; font-size:15px; color:var(--ink-2)}
+  .side li b{color:var(--ink); font-weight:600}
+
+  /* features */
+  .tint{background:var(--tint)}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:38px}
+  @media(max-width:940px){ .grid3{grid-template-columns:1fr 1fr} }
+  @media(max-width:640px){ .grid3{grid-template-columns:1fr} }
+  .feat{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:24px}
+  .ic{width:38px; height:38px; border-radius:11px; background:var(--brand-tint); color:var(--brand-dark); display:grid; place-items:center; margin-bottom:14px}
+  .feat h3{font-size:16px; margin:0 0 6px}
+  .feat p{font-size:14.5px; color:var(--ink-2); margin:0}
+
+  /* steps */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:38px; counter-reset:s}
+  @media(max-width:820px){ .steps{grid-template-columns:1fr} }
+  .step{position:relative; padding-top:8px}
+  .step-n{width:30px; height:30px; border-radius:50%; background:var(--brand); color:#fff; display:grid; place-items:center; font-size:14px; font-weight:700; margin-bottom:14px}
+  .step h3{font-size:17px; margin:0 0 6px}
+  .step p{font-size:15px; color:var(--ink-2); margin:0}
+
+  /* status */
+  .status{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:30px; display:grid; grid-template-columns:1.2fr 1fr; gap:30px}
+  @media(max-width:820px){ .status{grid-template-columns:1fr} }
+  .roll{list-style:none; padding:0; margin:0; display:grid; gap:12px}
+  .roll li{display:flex; justify-content:space-between; gap:14px; font-size:14.5px; padding-bottom:12px; border-bottom:1px solid var(--line)}
+  .roll li:last-child{border:0; padding-bottom:0}
+  .roll b{font-weight:600}
+  .st{font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:999px; height:fit-content}
+  .st-live{background:var(--brand-tint); color:var(--brand-dark)}
+  .st-rev{background:#eff4ff; color:#1d4ed8}
+  .st-built{background:#f4f0ff; color:#5b21b6}
+
+  /* faq */
+  details{border-bottom:1px solid var(--line); padding:18px 0}
+  details summary{cursor:pointer; font-weight:600; font-size:16px; list-style:none; display:flex; justify-content:space-between; gap:16px}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"+"; color:var(--ink-3); font-weight:400; font-size:20px; line-height:1}
+  details[open] summary::after{content:"–"}
+  details p{color:var(--ink-2); font-size:15px; margin:12px 0 0}
+
+  /* final cta */
+  .final{background:var(--brand); color:#fff; border-radius:22px; padding:48px 36px; text-align:center}
+  .final h2{color:#fff; margin-bottom:12px}
+  .final p{color:rgba(255,255,255,.86); max-width:40em; margin:0 auto 26px; font-size:16px}
+  .final .btn-primary{background:#fff; color:var(--brand-dark)}
+  .final .btn-primary:hover{background:#eef7f5}
+
+  footer{border-top:1px solid var(--line); padding:34px 0 44px; margin-top:70px; font-size:14px; color:var(--ink-3)}
+  .foot{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center}
+  .foot-links{display:flex; gap:20px; flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top"><span class="mark">Z</span> Zlign</a>
+    <nav class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#status">Release status</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.zlign.app">Join the closed test</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill"><span class="dot"></span> Android closed test is open</span>
+        <h1>Parking, booked by the week or the month.</h1>
+        <p class="lede">Zlign connects people who have an empty driveway, garage or bay with people who need somewhere to park near them. Book by the week or the month, then pay the owner at the spot in cash or UPI.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.zlign.app">Join the Android closed test</a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+        <p class="under">Closed test on Google Play. Sign in with a Google or email account that was opted in.</p>
+      </div>
+
+      <div class="phone" aria-hidden="true">
+        <div class="phone-head">
+          <span class="phone-title">Near you</span>
+          <span class="tag tag-free">Free bays</span>
+        </div>
+        <div class="map-strip">Map availability</div>
+        <div class="card-mini">
+          <div class="mini-top">
+            <div>
+              <div class="mini-name">Covered garage</div>
+              <div class="mini-sub">1.2 km · Monthly</div>
+            </div>
+            <span class="tag tag-free">Available</span>
+          </div>
+          <div class="mini-price">Booked by the month · paid at the spot</div>
+        </div>
+        <div class="card-mini">
+          <div class="mini-top">
+            <div>
+              <div class="mini-name">Driveway bay</div>
+              <div class="mini-sub">0.8 km · Weekly</div>
+            </div>
+            <span class="tag tag-soon">Awaiting approval</span>
+          </div>
+          <div class="mini-price">Owner has 24 hours to approve the request</div>
+        </div>
+        <div class="card-mini" style="margin-bottom:0">
+          <div class="mini-top">
+            <div>
+              <div class="mini-name">One-tap renewal</div>
+              <div class="mini-sub">Reminder 2 days before it ends</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div class="wrap strip-row">
+      <span><i class="tick">✓</i> Weekly or monthly bookings</span>
+      <span><i class="tick">✓</i> Pay the owner at the spot</span>
+      <span><i class="tick">✓</i> Cash or UPI</span>
+      <span><i class="tick">✓</i> No card details in the app</span>
+    </div>
+  </div>
+
+  <section id="how">
+    <div class="wrap">
+      <p class="kicker">How it works</p>
+      <h2>Two sides, one empty bay</h2>
+      <p class="sub">A space owner turns a spare parking spot into a steady rental. A vehicle owner gets a reliable place to park close by, without hunting for one every day.</p>
+
+      <div class="sides">
+        <div class="side">
+          <h3>If you have a space</h3>
+          <p>List a driveway, garage or bay and set a weekly or monthly rate.</p>
+          <ul>
+            <li><span class="tick">✓</span> <span>Add <b>spot photos</b> and an <b>ID proof</b> so vehicle owners know it is real</span></li>
+            <li><span class="tick">✓</span> <span>Block dates on your <b>owner calendar</b> whenever the bay is taken</span></li>
+            <li><span class="tick">✓</span> <span>Approve or decline each booking request — you always get the final say</span></li>
+            <li><span class="tick">✓</span> <span>See upcoming, active and completed bookings in <b>booking history</b></span></li>
+          </ul>
+        </div>
+        <div class="side">
+          <h3>If you need a space</h3>
+          <p>Find a bay near you on the map, request the dates, and park.</p>
+          <ul>
+            <li><span class="tick">✓</span> <span>See <b>free bays</b> over the next 7 days on the map before you book</span></li>
+            <li><span class="tick">✓</span> <span>Get <b>alerts</b> when a bay you watch may become free</span></li>
+            <li><span class="tick">✓</span> <span>Renew with <b>one tap</b>, with a reminder two days before the booking ends</span></li>
+            <li><span class="tick">✓</span> <span>Keep your vehicle details in <b>My Garage</b>, including a photo of the plate</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tint" id="features">
+    <div class="wrap">
+      <p class="kicker">Built in</p>
+      <h2>Everything the handover needs</h2>
+      <p class="sub">Booking, approval, contact and renewal live in the app. Payment happens between the two of you, at the spot.</p>
+
+      <div class="grid3">
+        <div class="feat">
+          <div class="ic">📍</div>
+          <h3>OpenStreetMap availability</h3>
+          <p>Pins show how many bays are free over the next 7 days, based on every listing on Zlign — not just your own bookings.</p>
+        </div>
+        <div class="feat">
+          <div class="ic">✅</div>
+          <h3>Owner approval in 24 hours</h3>
+          <p>Every booking is a request. The owner approves or declines; unanswered requests expire after a day and release the bay.</p>
+        </div>
+        <div class="feat">
+          <div class="ic">🔒</div>
+          <h3>Private profiles</h3>
+          <p>Your profile is readable only by you. Contact happens inside the booking, using the phone number attached to it.</p>
+        </div>
+        <div class="feat">
+          <div class="ic">💬</div>
+          <h3>Chat templates</h3>
+          <p>Quick in-app messages for the usual questions, or share the same message on WhatsApp in one tap.</p>
+        </div>
+        <div class="feat">
+          <div class="ic">⭐</div>
+          <h3>One review per booking</h3>
+          <p>Only the vehicle owner on a completed booking can review it, and only once. Ratings reflect real stays.</p>
+        </div>
+        <div class="feat">
+          <div class="ic">🛡️</div>
+          <h3>Admin moderation</h3>
+          <p>Listings need photos and ID proof, past start times are blocked, and listings with active bookings cannot be deleted.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="kicker">Getting started</p>
+      <h2>Three steps</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-n">1</div>
+          <h3>Install from the closed test</h3>
+          <p>Join the Zlign testing link with the Google account you were opted in with, then install from Google Play.</p>
+        </div>
+        <div class="step">
+          <div class="step-n">2</div>
+          <h3>Pick your side</h3>
+          <p>Sign up with Google or email and choose Space owner or Vehicle owner. You can add the other side later.</p>
+        </div>
+        <div class="step">
+          <div class="step-n">3</div>
+          <h3>List or book</h3>
+          <p>Owners add a bay and a weekly or monthly rate. Vehicle owners find one on the map and send a request.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tint" id="status">
+    <div class="wrap">
+      <p class="kicker">Where it stands</p>
+      <h2>Honest release status</h2>
+      <p class="sub">Zlign is in closed testing on Android. Here is exactly what is live, what is waiting on Google, and what is already built for the next update.</p>
+
+      <div class="status" style="margin-top:32px">
+        <div>
+          <h3 style="margin:0 0 6px; font-size:18px">Weekly and monthly only</h3>
+          <p style="color:var(--ink-2); font-size:15px; margin:0 0 16px">Hourly and daily bookings were removed from new bookings, so a bay is rented for a real stretch of time rather than an afternoon. Existing hourly and daily bookings still load.</p>
+          <h3 style="margin:0 0 6px; font-size:18px">You pay the owner, not the app</h3>
+          <p style="color:var(--ink-2); font-size:15px; margin:0">Zlign does not take card or UPI credentials and does not process payments. The parking charge is settled at the spot, in cash or UPI, as the owner and vehicle owner agree.</p>
+        </div>
+        <div>
+          <ul class="roll">
+            <li><span><b>v1.6.4</b> · live for testers</span><span class="st st-live">Released</span></li>
+            <li><span><b>v1.6.5</b> · with Google</span><span class="st st-rev">In review</span></li>
+            <li><span><b>v1.6.6</b> · booking requests</span><span class="st st-built">Built</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap" style="max-width:820px">
+      <p class="kicker">FAQ</p>
+      <h2>Questions people ask</h2>
+      <div style="margin-top:22px">
+        <details open>
+          <summary>How do I get the app?</summary>
+          <p>Zlign is in closed testing on Google Play, so it is not public yet. Use the <a href="https://play.google.com/apps/testing/com.zlign.app">testing link</a> with a Google account that has been added as a tester, accept the invite, then install from Play. Testers can sign in to the app with their own Google or email account.</p>
+        </details>
+        <details>
+          <summary>How much does it cost?</summary>
+          <p style="margin-top:12px">No price is published for Zlign yet. The app opens, lists and books without any in-app payment screen — the parking charge is agreed with the space owner and paid at the spot.</p>
+        </details>
+        <details>
+          <summary>Is my data private?</summary>
+          <p>Your user profile is readable only by you and by admins. Contact details are shared through the booking, not on a public profile, and reviews are limited to one per completed booking from the vehicle owner.</p>
+        </details>
+        <details>
+          <summary>Is there an iPhone version?</summary>
+          <p>Not at the moment. Zlign is an Android app built with Flutter, in closed testing on Google Play. This page will say so if that changes.</p>
+        </details>
+        <details>
+          <summary>Which cities are covered?</summary>
+          <p>Zlign is not limited to a published city list — the map shows what owners have listed. Areas fill up as owners add spaces, so if your area looks empty, it means nobody has listed a bay there yet.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="final">
+      <h2>Your bay is already there</h2>
+      <p>Somewhere within walking distance of your usual parking problem, someone has an empty driveway. Zlign is how you two find each other.</p>
+      <a class="btn btn-primary" href="https://play.google.com/apps/testing/com.zlign.app">Join the Android closed test</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <div style="display:flex; align-items:center; gap:9px; color:var(--ink); font-weight:600; margin-bottom:6px"><span class="mark" style="width:26px;height:26px;border-radius:7px;font-size:14px">Z</span> Zlign Parking App</div>
+      <div>A parking marketplace for India · com.zlign.app · <a href="mailto:zlign9@gmail.com">zlign9@gmail.com</a></div>
+    </div>
+    <div class="foot-links">
+      <a href="https://play.google.com/apps/testing/com.zlign.app">Closed test</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+      <a href="mailto:zlign9@gmail.com">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
